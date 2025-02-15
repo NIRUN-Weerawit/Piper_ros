@@ -1,0 +1,39 @@
+<?xml version='1.0' ?>
+<launch>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="description_pkg_name" default="piper_description"/>
+    <arg name="xacro_file_path" default="$(find-pkg-share $(var description_pkg_name))/urdf/piper_description.xacro"/>
+    <arg name="robot_description" default="$(command 'xacro $(var xacro_file_path)')"/>
+
+    <!-- Spawn controllers using controller_manager  -->
+    <node pkg="controller_manager" exec="spawner" 
+          name="controller_spawner" 
+          output="screen"
+          respawn="false"
+          namespace="/piper_description"
+          args="joint_state_controller
+                joint1_position_controller
+                joint2_position_controller
+                joint3_position_controller
+                joint4_position_controller
+                joint5_position_controller
+                joint6_position_controller
+                joint7_position_controller
+                joint8_position_controller">
+        <param from="$(find-pkg-share $(var description_pkg_name))/config/piper_gazebo_control.yaml"/>
+    </node>
+    
+    <!-- Robot State Publisher with remapped joint_states -->
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" 
+          name="robot_state_publisher" 
+          output="screen" 
+          respawn="false">
+        <remap from="/joint_states" to="/piper_description/joint_states" />
+        <param name="use_sim_time" value="$(var use_sim_time)"/>
+        <param name="robot_description" value="$(var robot_description)"/>
+        <param from="$(find-pkg-share $(var description_pkg_name))/config/piper_gazebo_control.yaml"/>
+    </node>
+
+    <!-- <node pkg="controller_manager" exec="ros2_control_node" name="controller_manager" output="screen"/> -->
+
+</launch>

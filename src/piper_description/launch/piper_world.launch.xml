@@ -1,0 +1,60 @@
+<?xml version='1.0' ?>
+<launch>
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <arg name="description_pkg_name" default="piper_description"/>
+  <arg name="xacro_file_path" default="$(find-pkg-share $(var description_pkg_name))/urdf/piper_description.xacro"/>
+  <arg name="robot_description" default="$(command 'xacro $(var xacro_file_path)')"/>
+  <arg name="world_file_path" default="$(find-pkg-share piper_description)/worlds/empty.world"/>
+  <!-- We resume the logic in empty_world.launch  
+  <include file="$(find-pkg-share gazebo_ros)/launch/gazebo.launch.py">
+    <arg name="world_name" value="$(find-pkg-share piper_description)/worlds/empty.world"/>
+    <arg name="debug" value="$(var debug)" />
+    <arg name="gui" value="$(var gui)" />
+    <arg name="paused" value="$(var paused)"/>
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="headless" value="$(var headless)"/>
+  </include>
+  -->
+  <!-- gzserver-->
+  <include file="$(find-pkg-share gazebo_ros)/launch/gzserver.launch.py">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="world" value="$(var world_file_path)"/>
+  </include> 
+
+  <!-- gzclient-->
+  <include file="$(find-pkg-share gazebo_ros)/launch/gzclient.launch.py">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+  </include> 
+
+  <!-- robot_state_publisher -->  
+  <node pkg="robot_state_publisher" exec="robot_state_publisher">
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+      <param name="robot_description" value="$(var robot_description)"/>
+  </node>
+  
+
+  <!-- Robot State Publisher with remapped joint_states 
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" 
+          name="robot_state_publisher" 
+          output="screen" 
+          respawn="false">
+        <remap from="/joint_states" to="/piper_description/joint_states"/>
+        <param name="use_sim_time" value="$(var use_sim_time)"/>
+        <param name="robot_description" value="$(var robot_description)"/>
+    </node>-->
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <node pkg="gazebo_ros" exec="spawn_entity.py" output="screen" args="-entity arm -topic /robot_description">
+        <param name="use_sim_time" value="$(var use_sim_time)"/>
+    </node>
+    
+  
+ 
+  
+</launch>

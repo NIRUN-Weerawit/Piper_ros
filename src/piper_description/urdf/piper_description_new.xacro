@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
-     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
-     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="arm">
-  <link
+  name="arm"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+<!-- world -->
+  <link name="world"/>
+  <joint name="fixed_base_joint" type="fixed">
+      <parent link="world"/>
+      <child link="base_link"/>
+  </joint>
+<!-- arm -->
+<link
     name="base_link">
     <inertial>
       <origin
@@ -509,4 +513,109 @@
       effort="10"
       velocity="1" />
   </joint>
+
+<!-- controller -->
+  <xacro:macro name="transmission_block" params="tran_name joint_name motor_name">
+    <transmission name="${tran_name}">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${joint_name}">
+            <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+        </joint>
+        <actuator name="$motor_name">
+            <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <xacro:transmission_block tran_name="tran1" joint_name="joint1" motor_name="motor1"/>
+  <xacro:transmission_block tran_name="tran2" joint_name="joint2" motor_name="motor2"/>
+  <xacro:transmission_block tran_name="tran3" joint_name="joint3" motor_name="motor3"/>
+  <xacro:transmission_block tran_name="tran4" joint_name="joint4" motor_name="motor4"/>
+  <xacro:transmission_block tran_name="tran5" joint_name="joint5" motor_name="motor5"/>
+  <xacro:transmission_block tran_name="tran6" joint_name="joint6" motor_name="motor6"/>
+  <xacro:transmission_block tran_name="tran7" joint_name="joint7" motor_name="motor7"/>
+  <xacro:transmission_block tran_name="tran8" joint_name="joint8" motor_name="motor8"/>
+<!-- gazebo -->
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <robotNamespace>piper_description</robotNamespace>
+        <parameters>$(find piper_description)/config/piper_gazebo_control.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <ros2_control name="piper_control" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="joint1">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint2">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint3">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint4">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint5">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint6">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint7">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint8">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+  </ros2_control>
+ 
+  <gazebo reference="base_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="link1">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link2">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="link3">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link4">
+    <material>Gazebo/Black</material>
+  </gazebo>
+ 
+  <gazebo reference="link5">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link6">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link7">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+ 
+  <gazebo reference="link8">
+    <material>Gazebo/Orange</material>
+  </gazebo> 
+
 </robot>

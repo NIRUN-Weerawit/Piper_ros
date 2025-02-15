@@ -1,37 +1,95 @@
 piper_description:
-  joint_state_controller:
-    type: joint_state_controller/JointStateController
-    publish_rate: 200
+  ros__parameters:
+    update_rate: 200  # Hz
 
-  joint1_position_controller:
-    type: position_controllers/JointPositionController
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint1_position_controller:
+      type: position_controllers/JointPositionController
+    joint2_position_controller:
+      type: position_controllers/JointPositionController
+    joint3_position_controller:
+      type: position_controllers/JointPositionController
+    joint4_position_controller:
+      type: position_controllers/JointPositionController
+    joint5_position_controller:
+      type: position_controllers/JointPositionController
+    joint6_position_controller:
+      type: position_controllers/JointPositionController
+    joint7_position_controller:
+      type: position_controllers/JointPositionController
+    joint8_position_controller:
+      type: position_controllers/JointPositionController
+
+joint1_position_controller:
+  ros__parameters:
     joint: joint1
-    pid: {p: 100.0, i: 0.01, d: 5.0}
-  joint2_position_controller:
-    type: position_controllers/JointPositionController
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.01
+      d: 5.0
+
+joint2_position_controller:
+  ros__parameters:
     joint: joint2
-    pid: {p: 100.0, i: 0.01, d: 5.0}
-  joint3_position_controller:
-    type: position_controllers/JointPositionController
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.01
+      d: 5.0
+
+joint3_position_controller:
+  ros__parameters:
     joint: joint3
-    pid: {p: 100.0, i: 0.01, d: 5.0}
-  joint4_position_controller:
-    type: position_controllers/JointPositionController
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.01
+      d: 5.0
+
+joint4_position_controller:
+  ros__parameters:
     joint: joint4
-    pid: {p: 100.0, i: 0.01, d: 5.0}
-  joint5_position_controller:
-    type: position_controllers/JointPositionController
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.01
+      d: 5.0
+
+joint5_position_controller:
+  ros__parameters:
     joint: joint5
-    pid: {p: 100.0, i: 0.01, d: 5.0}
-  joint6_position_controller:
-    type: position_controllers/JointPositionController
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.01
+      d: 5.0
+
+joint6_position_controller:
+  ros__parameters:
     joint: joint6
-    pid: {p: 100.0, i: 0.01, d: 5.0}
-  joint7_position_controller:
-    type: position_controllers/JointPositionController
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.01
+      d: 5.0
+
+joint7_position_controller:
+  ros__parameters:
     joint: joint7
-    pid: {p: 100, i: 0.001, d: 10.0}
-  joint8_position_controller:
-    type: position_controllers/JointPositionController
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.001
+      d: 10.0
+
+joint8_position_controller:
+  ros__parameters:
     joint: joint8
-    pid: {p: 100, i: 0.001, d: 10.0}
+    interface_name: position
+    pid:
+      p: 100.0
+      i: 0.001
+      d: 10.0

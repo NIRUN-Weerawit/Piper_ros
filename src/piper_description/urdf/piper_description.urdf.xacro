@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot
-  name="arm"
+  name="piper_description"
   xmlns:xacro="http://ros.org/wiki/xacro">
 <!-- world -->
   <link name="world"/>

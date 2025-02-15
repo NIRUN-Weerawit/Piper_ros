@@ -1,0 +1,94 @@
+/piper_description/controller_spawner:
+  ros__parameters:
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+      parameters:
+        publish_rate: 200
+
+    joint1_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint1]
+        interface: position
+        gains:
+          joint1:
+            p: 100.0
+            i: 0.01
+            d: 5.0
+
+    joint2_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint2]
+        interface: position
+        gains:
+          joint2:
+            p: 100.0
+            i: 0.01
+            d: 5.0
+
+    joint3_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint3]
+        interface: position
+        gains:
+          joint3:
+            p: 100.0
+            i: 0.01
+            d: 5.0
+
+    joint4_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint4]
+        interface: position
+        gains:
+          joint4:
+            p: 100.0
+            i: 0.01
+            d: 5.0
+
+    joint5_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint5]
+        interface: position
+        gains:
+          joint5:
+            p: 100.0
+            i: 0.01
+            d: 5.0
+
+    joint6_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint6]
+        interface: position
+        gains:
+          joint6:
+            p: 100.0
+            i: 0.01
+            d: 5.0
+
+    joint7_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint7]
+        interface: position
+        gains:
+          joint7:
+            p: 100.0
+            i: 0.001
+            d: 10.0
+
+    joint8_position_controller:
+      type: forward_command_controller/ForwardCommandController
+      parameters:
+        joints: [joint8]
+        interface: position
+        gains:
+          joint8:
+            p: 100.0
+            i: 0.001
+            d: 10.0
