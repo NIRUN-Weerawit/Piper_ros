@@ -1,30 +1,71 @@
-piper_description:
+controller_manager:
   ros__parameters:
     update_rate: 200  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    joints_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+
     joint1_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
     joint2_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
     joint3_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
     joint4_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
     joint5_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
     joint6_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
     joint7_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
     joint8_position_controller:
-      type: position_controllers/JointPositionController
+      type: position_controllers/JointGroupPositionController
+
+joint_trajectory_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_integration_in_goal_trajectories: true
+
+joints_position_controller:
+  ros__parameters:
+    type: position_controllers/JointGroupPositionController
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+      - joint7
+      - joint8
+    interface_name: position
+    gains:
+        joint1: {p: 100.0, i: 0.01, d: 5.0}
+        joint2: {p: 100.0, i: 0.01, d: 5.0}
+        joint3: {p: 100.0, i: 0.01, d: 5.0}
+        joint4: {p: 100.0, i: 0.01, d: 5.0}
+        joint5: {p: 100.0, i: 0.01, d: 5.0}
+        joint6: {p: 100.0, i: 0.01, d: 5.0}
+        joint7: {p: 100.0, i: 0.01, d: 5.0}
+        joint8: {p: 100.0, i: 0.01, d: 5.0}
 
 joint1_position_controller:
   ros__parameters:
-    joint: joint1
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint1
     interface_name: position
     pid:
       p: 100.0
@@ -33,7 +74,9 @@ joint1_position_controller:
 
 joint2_position_controller:
   ros__parameters:
-    joint: joint2
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint2
     interface_name: position
     pid:
       p: 100.0
@@ -42,7 +85,9 @@ joint2_position_controller:
 
 joint3_position_controller:
   ros__parameters:
-    joint: joint3
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint3
     interface_name: position
     pid:
       p: 100.0
@@ -51,7 +96,9 @@ joint3_position_controller:
 
 joint4_position_controller:
   ros__parameters:
-    joint: joint4
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint4
     interface_name: position
     pid:
       p: 100.0
@@ -60,7 +107,9 @@ joint4_position_controller:
 
 joint5_position_controller:
   ros__parameters:
-    joint: joint5
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint5
     interface_name: position
     pid:
       p: 100.0
@@ -69,7 +118,9 @@ joint5_position_controller:
 
 joint6_position_controller:
   ros__parameters:
-    joint: joint6
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint6
     interface_name: position
     pid:
       p: 100.0
@@ -78,7 +129,9 @@ joint6_position_controller:
 
 joint7_position_controller:
   ros__parameters:
-    joint: joint7
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint7
     interface_name: position
     pid:
       p: 100.0
@@ -87,7 +140,9 @@ joint7_position_controller:
 
 joint8_position_controller:
   ros__parameters:
-    joint: joint8
+    type: position_controllers/JointGroupPositionController
+    joints: 
+      - joint8
     interface_name: position
     pid:
       p: 100.0

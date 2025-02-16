@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot
-  name="piper_description"
+  name="arm"
   xmlns:xacro="http://ros.org/wiki/xacro">
 <!-- world -->
   <link name="world"/>
@@ -31,7 +31,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/base_link.dae" />
+          filename="file://$(find piper_description)/meshes/base_link.dae" />
       </geometry>
       <material
         name="">
@@ -45,7 +45,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/base_link.STL" />
+          filename="file://$(find piper_description)/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -71,7 +71,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link1.dae" />
+          filename="file://$(find piper_description)/meshes/link1.dae" />
       </geometry>
       <material
         name="">
@@ -85,7 +85,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link1.STL" />
+          filename="file://$(find piper_description)/meshes/link1.STL" />
       </geometry>
     </collision>
   </link>
@@ -129,7 +129,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link2.dae" />
+          filename="file://$(find piper_description)/meshes/link2.dae" />
       </geometry>
       <material
         name="">
@@ -143,7 +143,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link2.STL" />
+          filename="file://$(find piper_description)/meshes/link2.STL" />
       </geometry>
     </collision>
   </link>
@@ -187,7 +187,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link3.dae" />
+          filename="file://$(find piper_description)/meshes/link3.dae" />
       </geometry>
       <material
         name="">
@@ -201,7 +201,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link3.STL" />
+          filename="file://$(find piper_description)/meshes/link3.STL" />
       </geometry>
     </collision>
   </link>
@@ -245,7 +245,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link4.dae" />
+          filename="file://$(find piper_description)/meshes/link4.dae" />
       </geometry>
       <material
         name="">
@@ -259,7 +259,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link4.STL" />
+          filename="file://$(find piper_description)/meshes/link4.STL" />
       </geometry>
     </collision>
   </link>
@@ -303,7 +303,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link5.dae" />
+          filename="file://$(find piper_description)/meshes/link5.dae" />
       </geometry>
       <material
         name="">
@@ -317,7 +317,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link5.STL" />
+          filename="file://$(find piper_description)/meshes/link5.STL" />
       </geometry>
     </collision>
   </link>
@@ -361,7 +361,7 @@
         rpy="0 0 1.5708" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link6.dae" />
+          filename="file://$(find piper_description)/meshes/link6.dae" />
       </geometry>
       <material
         name="">
@@ -375,7 +375,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link6_1.STL" />
+          filename="file://$(find piper_description)/meshes/link6_1.STL" />
       </geometry>
     </collision>
   </link>
@@ -419,7 +419,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link7.dae" />
+          filename="file://$(find piper_description)/meshes/link7.dae" />
       </geometry>
       <material
         name="">
@@ -433,7 +433,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link7.STL" />
+          filename="file://$(find piper_description)/meshes/link7.STL" />
       </geometry>
     </collision>
   </link>
@@ -477,7 +477,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link8.dae" />
+          filename="file://$(find piper_description)/meshes/link8.dae" />
       </geometry>
       <material
         name="">
@@ -491,7 +491,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://piper_description/meshes/link8.STL" />
+          filename="file://$(find piper_description)/meshes/link8.STL" />
       </geometry>
     </collision>
   </link>
@@ -536,13 +536,53 @@
   <xacro:transmission_block tran_name="tran6" joint_name="joint6" motor_name="motor6"/>
   <xacro:transmission_block tran_name="tran7" joint_name="joint7" motor_name="motor7"/>
   <xacro:transmission_block tran_name="tran8" joint_name="joint8" motor_name="motor8"/>
+
+<!-- ROS 2 Control -->
+  <ros2_control name="PiperSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin> 
+    </hardware>
+    <joint name="joint1">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint2">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint3">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint4">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint5">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint6">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint7">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint8">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+  </ros2_control>
+  
 <!-- gazebo -->
   <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNamespace>/piper_description</robotNamespace>
-        <legacyModeNS>true</legacyModeNS>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <!-- <robotNamespace>/piper_description</robotNamespace> -->
+        <parameters>$(find piper_description)/config/piper_gazebo_control.yaml</parameters>
     </plugin>
-  </gazebo>
+  </gazebo> 
  
   <!-- <gazebo reference="base_link">
     <material>Gazebo/Black</material>

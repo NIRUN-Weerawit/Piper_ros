@@ -1,8 +1,5 @@
 <?xml version='1.0' ?>
 <launch>
-    
-    <include file="$(find-pkg-share piper_description)/launch/piper_gazebo_controller.launch.xml"/>
-    
     <include file="$(find-pkg-share piper_description)/launch/piper_world.launch.py"/>
-    
+    <include file="$(find-pkg-share piper_description)/launch/piper_gazebo_controller.launch.py"/>
 </launch>
