@@ -1,8 +1,8 @@
-# piper 机械臂(humble)
+# AgileX Robotic Arm (humble)
+
+[CN](README.MD)
 
 ![ubuntu](https://img.shields.io/badge/Ubuntu-22.04-orange.svg)
-
-[EN](README(EN).MD)
 
 Test:
 
@@ -10,11 +10,9 @@ Test:
 |---|---|
 |![humble](https://img.shields.io/badge/ros-humble-blue.svg)|![Pass](https://img.shields.io/badge/Pass-blue.svg)|
 
-## 1 安装方法
+## Installation
 
-### 1.1 安装依赖
-
-注: python-can版本应高于4.3.1
+### Install dependencies
 
 ```shell
 pip3 install python-can
@@ -31,270 +29,279 @@ sudo apt install ros-$ROS_DISTRO-ros2-controllers
 sudo apt install ros-$ROS_DISTRO-controller-manager
 ```
 
-## 2 快速使用
+## Quick Start
 
-### 2.1 使能can模块
+### Enable CAN module
 
-#### 2.1.1 激活单个can模块, **此处使用`can_activate.sh`脚本**
+First, you need to set up the shell script parameters.
 
-##### 1) pc只插入一个usb转can模块
+#### Single robotic arm
 
-直接执行
+##### PC with Only One USB-to-CAN Module Inserted
+
+- **Use the `can_activate.sh`**
+
+Directly run:
 
 ```bash
 bash can_activate.sh can0 1000000
 ```
 
-##### 2) pc插入多个usb转can模块， 但每次只激活一个can模块
+##### PC with Multiple USB-to-CAN Modules Inserted
 
-注： 此处用于同时使用机械臂和底盘的的情况
+**Use the `can_activate.sh`**
 
-(1) 查看can模块插在usb端口的硬件地址。拔掉所有can模块，只将连接到机械臂的can模块插入PC，执行
+Disconnect all CAN modules.
+
+Only connect the CAN module linked to the robotic arm to the PC, and then run the script.
 
 ```shell
 sudo ethtool -i can0 | grep bus
 ```
 
-并记录下`bus-info`的数值例如`1-2:1.0`
+and record the `bus-info` value, for example, `1-2:1.0`.
 
-注：**一般第一个插入的can模块会默认是can0，如果没有查询到can可以使用`bash find_all_can_port.sh`来查看刚才usb地址对应的can名称**
+**Note: Generally, the first inserted CAN module defaults to `can0`. If the CAN interface is not found, use `bash find_all_can_port.sh` to check the CAN names corresponding to the USB addresses.**
 
-(2) 激活can设备。假设上面的操作记录的`bus-info`数值为`1-2:1.0`，执行：
+Assuming the recorded `bus-info` value from the above operation is `1-2:1.0`.
+
+Then execute the command to check if the CAN device has been successfully activated.
 
 ```bash
 bash can_activate.sh can_piper 1000000 "1-2:1.0"
 ```
 
-注：**1-2:1.0硬件编码的usb端口插入的can设备，名字被重命名为can_piper，波特率为1000000，并激活**
+**Note: This means that the CAN device connected to the USB port with hardware encoding `1-2:1.0` is renamed to `can_piper`, set to a baud rate of 1,000,000, and activated.**
 
-(3) 检查是否激活成功
+Then run`ifconfig` to check if `can_piper` appears. If it does, the CAN module has been successfully configured.
 
-执行`ifconfig`查看是否有`can_piper`，如果有则can模块设置成功
+#### Enable multiple CAN modules
 
-#### 2.1.2 同时激活多个can模块，**此处使用`can_config.sh`脚本**
-
-##### 1) 逐个拔插can模块并一一记录每个模块对应的usb口硬件地址
+**Use the `can_config.sh`  here**
 
 在`can_config.sh`中，`EXPECTED_CAN_COUNT`参数为想要激活的can模块数量,现在假设为2
 
 然后can模块中的其中一个单独插入PC，执行
 
+In the `can_config.sh`, the `EXPECTED_CAN_COUNT` shows the number of the CAN modules you want to activate. Assume it's 2 here.
+
+Then, insert one of the two CAN modules into the PC alone and run the script.
+
 ```shell
 sudo ethtool -i can0 | grep bus
 ```
 
-并记录下`bus-info`的数值例如`1-2:1.0`
+and record the `bus-info` value, for example, `1-2:1.0`.
 
-(2) 接着插入下一个can模块，注意**不可以**与上次can模块插入的usb口相同，然后执行
+Next, insert the second CAN module, ensuring it is connected to a different USB port than the one used previously, and then execute the script.
 
 ```shell
 sudo ethtool -i can1 | grep bus
 ```
 
-注：**一般第一个插入的can模块会默认是can0，第二个为can1，如果没有查询到can可以使用`bash find_all_can_port.sh`来查看刚才usb地址对应的can名称**
+**Note: Generally, the first inserted CAN module defaults to `can0`, and the second one to `can1`. If the CAN interfaces are not found, use `bash find_all_can_port.sh` to check the CAN names corresponding to the USB addresses.**
 
-##### 2) 预定义USB 端口、目标接口名称及其比特率
+Assuming the recorded `bus-info` values are `1-2:1.0` and `1-4:1.0`, replace the parameters inside the double quotes in `USB_PORTS["1-9:1.0"]="can_left:1000000"` with `1-2:1.0`.
 
-假设上面的操作记录的`bus-info`数值分别为`1-2:1.0`、`1-4:1.0`，则将下面的`USB_PORTS["1-9:1.0"]="can_left:1000000"`的中括号内部的双引号内部的参数换为`1-2:1.0`和`1-4:1.0`.
+Similarly, update the other one
 
-最终结果为：
+`USB_PORTS["1-5:1.0"]="can_right:1000000"` -> `USB_PORTS["1-4:1.0"]="can_right:1000000"`
 
-`USB_PORTS["1-2:1.0"]="can_right:1000000"`
+**Note: This means that the CAN device connected to the USB port with hardware encoding `1-2:1.0` is renamed to `can_left`, set to a baud rate of 1,000,000, and activated.**
 
-`USB_PORTS["1-4:1.0"]="can_right:1000000"`
+Then execute `bash can_config.sh` and check the terminal output to see if the activation was successful.
 
-注：**1-2:1.0硬件编码的usb端口插入的can设备，名字被重命名为can_left，波特率为1000000，并激活**
+Afterward, run `ifconfig` to verify if `can_left` and `can_right` appear. If they do, the CAN modules have been successfully configured.
 
-##### 3) 看终端输出是否激活成功
-
-执行`bash can_config.sh`
-
-##### 4) 查看can是否设置成功
-
-执行`ifconfig`查看是不是有`can_left`和`can_right`
-
-### 2.2 运行节点
-
-编译
+### Start the Node
 
 ```shell
 colcon build
 ```
 
-#### 2.2.1 单个机械臂
+#### Single robotics arm
 
-节点名`piper_single_ctrl`
+Node name: `piper_single_ctrl`
 
 param
 
 ```shell
-can_port:要打开的can路由名字
-auto_enable:是否自动使能，True则开启程序就自动使能
-# 注意这个设置为False，中断程序后再启动节点，机械臂会保持上次启动程序的状态
-# 若上次启动程序机械臂状态为使能，则中断程序后再启动节点，机械臂仍为使能
-# 若上次启动程序机械臂状态为失能，则中断程序后再启动节点，机械臂仍为失能
-gripper_exist:是否有末端夹爪，True则说明有末端夹爪，会开启夹爪控制
-rviz_ctrl_flag:是否使用rviz来发送关节角消息，True则接收rviz发送的关节角消息
-#由于rviz中的joint7范围是[0,0.04]，而真实夹爪行程为0.08m，打开rviz控制后会将rviz发出的joint7乘2倍
+can_port: name of the CAN route to open.
+
+auto_enable: Whether to automatically enable the system. If True, the system will automatically enable upon starting the program.
+#  Set this to False if you want to manually control the enable state. If the program is interrupted and then restarted, the robotic arm will maintain the state it had during the last run.
+# If the arm was enabled, it will remain enabled after restarting.
+# If the arm was disabled, it will remain disabled after restarting.
+
+gripper_exist: Whether there is an end gripper. If True, it means there is an end gripper and the gripper control will be turned on.
+
+rviz_ctrl_flag: Whether to use RViz to send joint angle messages. If True, the system will receive joint angle messages sent by rViz.
+# Since the joint 7 range in RViz is [0,0.04], but the actual gripper travel is 0.08m, joint 7 values sent by RViz will be multiplied by 2 when controlling the gripper.
 ```
 
-有两个启动单臂的launch文件`start_single_piper_rviz.launch.py` 和 `start_single_piper.launch.py`
+There are two launch files for starting the single-arm robot: `start_single_piper_rviz.launch.py` and `start_single_piper.launch.py`.
 
-前者是可以一起将rviz启动，然后可以拖动滑动条控制机械臂
+The first one can launch RViz together, allowing you to control the robotic arm by moving the sliders.
 
-启动控制节点
+Start the control node.
 
 ```shell
-# 启动节点
+# start the node
 ros2 run piper piper_single_ctrl --ros-args -p can_port:=can0 -p auto_enable:=false -p gripper_exist:=true -p rviz_ctrl_flag:=true
-# 启动launch
+# start the launch
 ros2 launch piper start_single_piper.launch.py can_port:=can0 auto_enable:=false gripper_exist:=false rviz_ctrl_flag:=true
-# 或，会以默认参数运行
+# Or,the node can be started with default parameters
 ros2 launch piper start_single_piper.launch.py
-# 也可以用rviz开启控制,需要更改的参数如上
+# You can also use RViz to enable control by adjusting the parameters as described above.
 ros2 launch piper start_single_piper_rviz.launch.py
 ```
 
 `ros2 topic list`
 
 ```shell
-/arm_status #机械臂状态，详见下文
-/enable_flag #使能标志位，发送给节点，发送true用来使能
-/end_pose #机械臂末端位姿状态反馈
-/joint_states #订阅关节消息，给这个消息发送关节位置能控制机械臂运动
-/joint_states_single #机械臂关节状态反馈
-/pos_cmd #末端控制消息
+/arm_status #the status of arm
+/enable_flag #Enable flag, sent to the node, send true to enable
+/end_pose #end pose feedback
+/joint_states #Subscribe to the joint message and send the joint position to this message to control the movement of the robot arm
+/joint_states_single #joints feedback
+/pos_cmd #end pose control
 ```
 
 ros2 service list
 
 ```shell
-/enable_srv #机械臂使能服务端
+/enable_srv #Enable service end
 ```
 
-使能机械臂
+Enable robotic arm
 
 ```shell
-# call 服务端
+# call service
 ros2 service call /enable_srv piper_msgs/srv/Enable enable_request:\ true\ 
 # pub topic
 ros2 topic pub /enable_flag std_msgs/msg/Bool data:\ true\ 
 ```
 
-失能机械臂
+Disable the robotic arm
 
 ```shell
-# call 服务端
+# call service
 ros2 service call /enable_srv piper_msgs/srv/Enable enable_request:\ false\ 
 # pub topic
 ros2 topic pub /enable_flag std_msgs/msg/Bool data:\ false\ 
 ```
 
-发布关节消息
+Publish joint messages
 
-注意，机械臂会抬起，请确保机械臂工作范围内无障碍
+Note: The robotic arm will lift. Please ensure there are no obstacles within its working range.
 
-机械臂会以默认速度的百分之10运动，夹爪力矩设定0.5N
+The robotic arm will move at 10% of the default speed, and the gripper torque is set to 0.5N. 
 
-速度范围限制为1-100,小于1时视为1
+The speed range is limited from 1 to 100. Any value less than 1 will be treated as 1.
 
-位置如下
+The position is as follows:
 
 ```shell
 ros2 topic pub /joint_states sensor_msgs/msg/JointState "{header: {stamp: {sec: 0, nanosec: 0}, frame_id: 'piper_single'}, name: ['joint1', 'joint2','joint3','joint4','joint5','joint6','joint7'], position: [0.2,0.2,-0.2,0.3,-0.2,0.5,0.01], velocity: [0,0,0,0,0,0,10], effort: [0,0,0,0,0,0,0.5]}"
 
 ```
 
-## 3 注意事项
+## Note
 
-- 需要先激活can设备，并且设置正确的波特率，才可以读取机械臂消息或者控制机械臂
-- 如果出现
+- You need to activate the CAN device and set the correct baud rate before you can read messages from or control the robotic arm.
+
+- If the following appears:
 
   ```shell
-  使能状态: False
+  Enable state: False
   <class 'can.exceptions.CanError'> Message NOT sent
   <class 'can.exceptions.CanError'> Message NOT sent
   ```
 
-  说明机械臂没有与can模块连同，拔插usb后，重新启动机械臂，再激活can模块，然后尝试重新启动节点
+  This indicates that the robotic arm is not connected to the CAN module. Unplug and re-plug the USB, restart the robotic arm, reactivate the CAN module, and then try restarting the node.
 
-- 如果打开了自动使能，尝试使能5s没有成功后，会自动退出程序
+- If automatic enabling is turned on and enabling is not successful within 5 seconds, the program will automatically exit.
 
-### 3.1 piper自定义消息
+### piper Custom Messages
 
-ros功能包`piper_msgs`
+ros package `piper_msgs`
 
-机械臂自身状态反馈消息，对应can协议中`id=0x2A1`的反馈消息
+ **Robotic Arm Status Feedback Message**: Corresponds to the feedback message with `id=0x2A1` in the CAN protocol.
 
 `PiperStatusMsg.msg`
 
 ```c
 uint8 ctrl_mode
 /*
-0x00 待机模式  
-0x01 CAN指令控制模式
-0x02 示教模式
-0x03 以太网控制模式
-0x04 wifi控制模式
-0x05 遥控器控制模式
-0x06 联动示教输入模式
-0x07 离线轨迹模式*/
+0x00 Standby mode  
+0x01 CAN command control mode
+0x02 Teaching mode
+0x03 Ethernet control mode
+0x04 wifi control mode
+0x05 Remote controller control mode
+0x06 Linked teaching mode
+0x07 Offline track mode
+*/
 uint8 arm_status
 /*
-0x00 正常
-0x01 急停
-0x02 无解
-0x03 奇异点
-0x04 目标角度超过限
-0x05 关节通信异常
-0x06 关节抱闸未打开 
-0x07 机械臂发生碰撞
-0x08 拖动示教时超速
-0x09 关节状态异常
-0x0A 其它异常  
-0x0B 示教记录
-0x0C 示教执行
-0x0D 示教暂停
-0x0E 主控NTC过温
-0x0F 释放电阻NTC过温*/
+0x00 Normal
+0x01 Emergency stop
+0x02 No solution
+0x03 Singularity
+0x04 Target angle exceeds limit
+0x05 Joint communication error
+0x06 Joint brake not released
+0x07 Robotic arm collision detected
+0x08 Overspeed during drag teaching
+0x09 Joint status abnormal
+0x0A Other abnormality
+0x0B Teaching record
+0x0C Teaching execution
+0x0D Teaching paused
+0x0E Main control NTC overheating
+0x0F Discharge resistor NTC overheating
+*/
 uint8 mode_feedback
 /*
 0x00 MOVE P
 0x01 MOVE J
 0x02 MOVE L
-0x03 MOVE C*/
+0x03 MOVE C
+*/
 uint8 teach_status
 /*
-0x00 关闭
-0x01 开始示教记录（进入拖动示教模式）
-0x02 结束示教记录（退出拖动示教模式）
-0x03 执行示教轨迹（拖动示教轨迹复现）
-0x04 暂停执行
-0x05 继续执行（轨迹复现继续）
-0x06 终止执行
-0x07 运动到轨迹起点*/
+0x00 Close
+0x01 Start teaching recording (enter drag teaching mode)
+0x02 End teaching recording (exit drag teaching mode)
+0x03 Execute teaching trajectory (reproduce drag teaching trajectory)
+0x04 Pause
+0x05 Resume (continue trajectory reproduction)
+0x06 Terminate execution
+0x07 Move to trajectory starting point
+*/
 uint8 motion_status
 /*
-0x00 到达指定点位
-0x01 未到达指定点位*/
+0x00 Reached the specified point
+0x01 Not reached the specified point
+*/
 uint8 trajectory_num
-/*0~255 (离线轨迹模式下反馈)*/
-int64 err_code//故障码
-bool joint_1_angle_limit//1号关节通信异常（0：正常 1：异常）
-bool joint_2_angle_limit//2号关节通信异常（0：正常 1：异常）
-bool joint_3_angle_limit//3号关节通信异常（0：正常 1：异常）
-bool joint_4_angle_limit//4号关节通信异常（0：正常 1：异常）
-bool joint_5_angle_limit//5号关节通信异常（0：正常 1：异常）
-bool joint_6_angle_limit//6号关节通信异常（0：正常 1：异常）
-bool communication_status_joint_1//1号关节角度超限位（0：正常 1：异常）
-bool communication_status_joint_2//2号关节角度超限位（0：正常 1：异常）
-bool communication_status_joint_3//3号关节角度超限位（0：正常 1：异常）
-bool communication_status_joint_4//4号关节角度超限位（0：正常 1：异常）
-bool communication_status_joint_5//5号关节角度超限位（0：正常 1：异常）
-bool communication_status_joint_6//6号关节角度超限位（0：正常 1：异常）
+/* 0~255 (Feedback in offline trajectory mode) */
+int64 err_code// Error code
+bool joint_1_angle_limit// Joint 1 communication error (0: Normal, 1: Error)
+bool joint_2_angle_limit// Joint 2 communication error (0: Normal, 1: Error)
+bool joint_3_angle_limit// Joint 3 communication error (0: Normal, 1: Error)
+bool joint_4_angle_limit// Joint 4 communication error (0: Normal, 1: Error)
+bool joint_5_angle_limit// Joint 5 communication error (0: Normal, 1: Error)
+bool joint_6_angle_limit// Joint 6 communication error (0: Normal, 1: Error)
+bool communication_status_joint_1// Joint 1 angle exceeds limit (0: Normal, 1: Error)
+bool communication_status_joint_2// Joint 2 angle exceeds limit (0: Normal, 1: Error)
+bool communication_status_joint_3// Joint 3 angle exceeds limit (0: Normal, 1: Error)
+bool communication_status_joint_4// Joint 4 angle exceeds limit (0: Normal, 1: Error)
+bool communication_status_joint_5// Joint 5 angle exceeds limit (0: Normal, 1: Error)
+bool communication_status_joint_6// Joint 6 angle exceeds limit (0: Normal, 1: Error)
 ```
 
-机械臂末端位姿控制，注意:有些奇异点无法到达
+End-effector pose control: Note that some singularities may be unreachable.
 
 `PosCmd.msg`
 
@@ -310,27 +317,27 @@ int32 mode1
 int32 mode2
 ```
 
-## 4 使用仿真
+## Simulation
 
-打开rviz
+open rviz
 
 ```shell
 ros2 launch piper_description display_xacro.launch.py
 ```
 
-运行后会发布`/joint_states`,可以通过`ros2 topic echo /joint_states` 查看
+After running, the `/joint_states` topic will be published, and you can view it using `ros2 topic echo /joint_states`.
 
-同时会弹出两个页面如下，滑动条数值对应`/joint_states`数值，拖动滑动条可以改变其数值，rviz中的模型也会随动
+At the same time, two windows will pop up as shown below. The slider values correspond to the values of `/joint_states`, and dragging the sliders will change those values. The model in RViz will also move accordingly.
 
 ![ ](./asserts/pictures/rviz_display.jpg)
 
-### 4.1 gazebo
+### gazebo
 
 coming...
 
-## 5 Q&A
+## Q&A
 
-1. 出现
+1.  
 
 ```shell
 colcon build
@@ -434,5 +441,5 @@ sudo apt install ros-$ROS_DISTRO-robot-state-publisher
 5. 
 
 ```shell
-sudo apt install ros-humble-xacro
+sudo apt install ros-foxy-xacro
 ```
